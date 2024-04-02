@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 public class ProgramController : Controller
 {
-    List<CollegeProgram> programs = 
+    List<CollegeProgram> programs =
     [
         new() { Id = 1, Name = "CSIT", Affliation = "TU", Started = DateTime.Now },
         new() { Id = 2, Name = "BCA", Affliation = "TU", Started = DateTime.Now.AddYears(-2) },
@@ -12,7 +12,9 @@ public class ProgramController : Controller
     [HttpGet]
     public IActionResult Index()
     {
-        return View(programs);
+        CollegeManagerDb db = new();//object
+        var models = db.CollegePrograms.ToList();
+        return View(models);
     }
 
     [HttpGet]
@@ -24,9 +26,12 @@ public class ProgramController : Controller
     [HttpPost]
     public IActionResult Add(CollegeProgram program) // model binding
     {
+        CollegeManagerDb db = new();
+        db.CollegePrograms.Add(program);
+        db.SaveChanges();
         // Do something on program
         programs.Add(program);
-        
+
         return RedirectToAction("Index");
     }
 }
